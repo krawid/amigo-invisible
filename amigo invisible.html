@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigo Invisible</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Amigo Invisible</h1>
+
+    <div>
+        <label for="nombre">Añadir participante:</label>
+        <input type="text" id="nombre" placeholder="Nombre">
+        <button onclick="addParticipante()">Añadir</button>
+    </div>
+
+    <ul id="participantes">
+        <!-- Lista de participantes -->
+    </ul>
+
+    <button onclick="sortearAmigos()">Sortear</button>
+
+    <div id="result">
+        <!-- Resultados del sorteo -->
+    </div>
+
+    <script>
+        let participantes = [];
+
+        function addParticipante() {
+            const input = document.getElementById('nombre');
+            const nombre = input.value.trim();
+            if (nombre) {
+                participantes.push(nombre);
+                renderParticipantes();
+                input.value = '';
+            } else {
+                alert('Por favor, introduce un nombre válido.');
+            }
+        }
+
+        function renderParticipantes() {
+            const ul = document.getElementById('participantes');
+            ul.innerHTML = '';
+            participantes.forEach((nombre, index) => {
+                const li = document.createElement('li');
+                li.textContent = nombre;
+                ul.appendChild(li);
+            });
+        }
+
+        function sortearAmigos() {
+            if (participantes.length < 2) {
+                alert('Debes añadir al menos 2 participantes para realizar el sorteo.');
+                return;
+            }
+
+            const shuffled = [...participantes];
+            shuffled.sort(() => Math.random() - 0.5);
+
+            const resultado = {};
+            for (let i = 0; i < shuffled.length; i++) {
+                const amigo = shuffled[i];
+                const invisible = shuffled[(i + 1) % shuffled.length];
+                resultado[amigo] = invisible;
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<h3>Resultados del sorteo:</h3>';
+            for (const [amigo, invisible] of Object.entries(resultado)) {
+                const p = document.createElement('p');
+                p.textContent = `${amigo} -> ${invisible}`;
+                resultDiv.appendChild(p);
+            }
+        }
+    </script>
+</body>
+</html>
